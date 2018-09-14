@@ -1,0 +1,80 @@
+
+// https://blog.csdn.net/yanbober/article/details/49314255
+task hello {
+    doLast {
+        println 'Hello world!'
+    }
+}
+
+//这是快捷写法，用<<替换doLast，后面解释
+task hl << {
+    println 'Hello world!'
+}
+
+//创建upper的task，使用Groovy语言编写
+task upper << {
+    String someString = 'mY_nAmE'
+    println "Original: " + someString
+    println "Upper case: " + someString.toUpperCase()
+}
+
+//有Action的task
+task actionTask << {
+    println 'I am actionTask'
+}
+//无Action的task
+task noActionTask {
+    println 'I am noActionTask'
+}
+// 任务依赖关系
+task taskX(dependsOn: 'taskY') << {
+    println 'taskX'
+}
+task taskY << {
+    println 'taskY'
+}
+
+4.times { counter ->
+    task "task$counter" << {
+        println "I'm task number $counter"
+    }
+}
+// 利用API 为任务增加新的行为
+task addhello << {
+    println 'Hello Earth'
+}
+addhello.doFirst {
+    println 'Hello Venus'
+}
+addhello.doLast {
+    println 'Hello Mars'
+}
+addhello << {
+    println 'Hello Jupiter'
+}
+
+// 可以通过美元符将一个task作为另一个task的属性
+task newhello << {
+    println 'Hello world!'
+}
+newhello.doLast {
+    println "Greetings from the $newhello.name task."
+}
+
+// Gradle允许在脚本中定义一个或多个默认任务
+defaultTasks 'clean', 'run'
+
+task clean << {
+    println 'Default Cleaning!'
+}
+
+task run << {
+    println 'Default Running!'
+}
+
+task other << {
+    println "I'm not a default task!"
+}
+
+
+
